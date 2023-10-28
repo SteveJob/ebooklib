@@ -13,7 +13,7 @@ def read(path):
 
 setup(
     name = 'EbookLib-MD',
-    version = '0.19',
+    version = '0.20',
     author = 'Aleksandar Erkalovic',
     author_email = 'aerkalov@gmail.com',
     packages = ['ebooklib', 'ebooklib.plugins'],

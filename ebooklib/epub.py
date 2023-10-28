@@ -1379,9 +1379,14 @@ class EpubReader(object):
     }
 
     def __init__(self, epub_file_name, options=None):
-        self.file_name = epub_file_name
+        if isinstance(epub_file_name, zipfile.ZipFile):
+            self.zf = epub_file_name
+            self.file_name = 'noname'
+        else:
+            self.zf = None
+            self.file_name = epub_file_name
+
         self.book = EpubBook()
-        self.zf = None
 
         self.opf_file = ''
         self.opf_dir = ''
@@ -1702,25 +1707,26 @@ class EpubReader(object):
             )
 
     def _load(self):
-        if os.path.isdir(self.file_name):
-            file_name = self.file_name
+        if not self.zf:
+            if os.path.isdir(self.file_name):
+                file_name = self.file_name
 
-            class Directory:
-                def read(self, subname):
-                    with open(os.path.join(file_name, subname), 'rb') as fp:
-                        return fp.read()
+                class Directory:
+                    def read(self, subname):
+                        with open(os.path.join(file_name, subname), 'rb') as fp:
+                            return fp.read()
 
-                def close(self):
-                    pass
+                    def close(self):
+                        pass
 
-            self.zf = Directory()
-        else:
-            try:
-                self.zf = zipfile.ZipFile(self.file_name, 'r', compression=zipfile.ZIP_DEFLATED, allowZip64=True)
-            except zipfile.BadZipfile as bz:
-                raise EpubException(0, 'Bad Zip file')
-            except zipfile.LargeZipFile as bz:
-                raise EpubException(1, 'Large Zip file')
+                self.zf = Directory()
+            else:
+                try:
+                    self.zf = zipfile.ZipFile(self.file_name, 'r', compression=zipfile.ZIP_DEFLATED, allowZip64=True)
+                except zipfile.BadZipfile as bz:
+                    raise EpubException(0, 'Bad Zip file')
+                except zipfile.LargeZipFile as bz:
+                    raise EpubException(1, 'Large Zip file')
 
         # 1st check metadata
         self._load_container()
