@@ -12,12 +12,12 @@ def read(path):
 
 
 setup(
-    name = 'EbookLib',
+    name = 'EbookLib-MD',
     version = '0.18',
     author = 'Aleksandar Erkalovic',
     author_email = 'aerkalov@gmail.com',
     packages = ['ebooklib', 'ebooklib.plugins'],
-    url = 'https://github.com/aerkalov/ebooklib',
+    url = 'https://github.com/SteveJob/ebooklib',
     license = 'GNU Affero General Public License',
     description = 'Ebook library which can handle EPUB2/EPUB3 and Kindle format',
     long_description = read('README.md'),
