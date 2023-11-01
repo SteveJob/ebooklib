@@ -571,6 +571,7 @@ class EpubBook(object):
         self._id_static = 0
 
         self.title = ''
+        self.creator = ''
         self.language = 'en'
         self.direction = None
 
@@ -660,6 +661,8 @@ class EpubBook(object):
 
     def add_author(self, author, file_as=None, role=None, uid='creator'):
         "Add author for this document"
+
+        self.creator = author
 
         self.add_metadata('DC', 'creator', author, {'id': uid})
 
@@ -1492,6 +1495,10 @@ class EpubReader(object):
         titles = self.book.get_metadata('DC', 'title')
         if len(titles) > 0:
             self.book.title = titles[0][0]
+
+        creators = self.book.get_metadata('DC', 'creator')
+        if len(creators) > 0:
+            self.book.creator = creators[0][0]
 
         for value, others in self.book.get_metadata('DC', 'identifier'):
             if others.get('id') == self.book.IDENTIFIER_ID:
